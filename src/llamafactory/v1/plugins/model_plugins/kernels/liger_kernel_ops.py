@@ -48,8 +48,8 @@ class LigerKernel(BaseKernel):
     @staticmethod
     def check_device() -> None:
         current = get_current_accelerator().type
-        if current not in (DeviceType.CUDA, DeviceType.NPU):
-            raise RuntimeError(f"LigerKernel requires CUDA or NPU, current accelerator is {current}.")
+        if current not in (DeviceType.CUDA, DeviceType.NPU, DeviceType.XPU):
+            raise RuntimeError(f"LigerKernel requires CUDA, NPU or XPU, current accelerator is {current}.")
 
     @staticmethod
     def check_deps() -> None:
