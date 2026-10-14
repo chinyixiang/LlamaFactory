@@ -95,7 +95,7 @@ def test_apply_all_kernels():
     mp.spawn(_apply_all_kernels)
 
 
-@pytest.mark.runs_on(["npu"])
+@pytest.mark.runs_on(["npu", "xpu"])
 def test_flash_linear_attention_kernels_compose_with_auto(monkeypatch):
     import fsdp_turbo.ops.fla  # noqa: F401
     from fsdp_turbo.ops import get_op
