@@ -20,7 +20,7 @@ from peft import PeftModel
 from transformers import GenerationMixin, PreTrainedModel, PreTrainedTokenizerBase
 from transformers.integrations import is_deepspeed_zero3_enabled
 from transformers.modeling_utils import is_fsdp_enabled
-from transformers.utils import is_torch_cuda_available, is_torch_npu_available
+from transformers.utils import is_torch_cuda_available, is_torch_npu_available, is_torch_xpu_available
 
 from ..extras import logging
 from ..extras.misc import check_version, infer_optim_dtype
@@ -489,7 +489,7 @@ def patch_model(
         ]:
             if is_torch_npu_available():
                 patch_qwen3_5_forward_npu(model)
-            elif is_torch_cuda_available() and model_args.flash_attn == "fa2":
+            elif (is_torch_cuda_available() or is_torch_xpu_available()) and model_args.flash_attn == "fa2":
                 # this is the patch for packing/neat_packing for GPU GDN. And when setting packing, flash_attn must be fa2.
                 patch_qwen3_5_forward_gpu(model)
 
