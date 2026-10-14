@@ -359,20 +359,20 @@ _TRITON_MOE_MAPPING: dict[str, dict[str, object]] = {
 
 @KernelPlugin("cuda_fused_moe").register()
 class CudaFusedMoEKernel(BaseKernel):
-    """Pure-Triton fused MoE kernel for NVIDIA CUDA GPUs.
+    """Pure-Triton fused MoE kernel for NVIDIA CUDA and Intel XPU GPUs.
 
     Replaces HuggingFace per-expert Python loops with a fully fused Triton pipeline:
     - Forward: scatter + grouped GEMMs + gather (single kernel per GEMM)
     - Backward: all dX and dW via grouped GEMMs (no Python loops)
 
-    Requires: CUDA GPU + Triton
+    Requires: CUDA or XPU GPU + Triton
     """
 
     @staticmethod
     def check_device() -> None:
         current = get_current_accelerator().type
-        if current != DeviceType.CUDA:
-            raise RuntimeError(f"CudaFusedMoEKernel requires CUDA, current accelerator is {current}.")
+        if current not in (DeviceType.CUDA, DeviceType.XPU):
+            raise RuntimeError(f"CudaFusedMoEKernel requires CUDA or XPU, current accelerator is {current}.")
 
     @staticmethod
     def check_deps() -> None:
