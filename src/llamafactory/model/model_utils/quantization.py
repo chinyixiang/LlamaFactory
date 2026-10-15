@@ -29,6 +29,7 @@ from transformers.modeling_utils import is_fsdp_enabled
 from ...extras import logging
 from ...extras.constants import FILEEXT2TYPE, QuantizationMethod
 from ...extras.misc import check_version, get_current_device
+from ...extras.packages import is_transformers_version_greater_than
 
 
 if TYPE_CHECKING:
@@ -131,7 +132,10 @@ def configure_quantization(
             quantization_config["use_exllama"] = False  # disable exllama
 
         if quant_method == QuantizationMethod.AWQ:
-            check_version("autoawq", mandatory=True)
+            if is_transformers_version_greater_than("5.0.0"):  # transformers 5 loads AWQ through gptqmodel
+                check_version("gptqmodel>=2.0.0", mandatory=True)
+            else:
+                check_version("autoawq", mandatory=True)
 
         if quant_method == QuantizationMethod.AQLM:
             check_version("aqlm>=1.1.0", mandatory=True)

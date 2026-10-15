@@ -101,7 +101,7 @@ def test_get_sft_dataset_kwargs_enables_chat():
     assert kwargs["chat"] is True
 
 
-@pytest.mark.runs_on(["cuda"])
+@pytest.mark.runs_on(["cuda", "xpu"])
 def test_tokenizer_supports_hf_chat_template_on_gpu(mb_model_path: str):
     from llamafactory.train.megatron_bridge.dataset_export import (
         supports_hf_chat_template,
